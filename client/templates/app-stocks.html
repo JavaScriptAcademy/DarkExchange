@@ -1,0 +1,35 @@
+<template name="appStocks">
+  <br>
+  <br>
+  <div align='center'>
+    <h2>Market Panel</h2>
+    <br>
+    <br>
+    <table class='table-condensed table-bordered table-hover' width="90%">
+      <thead class="thead-inverse">
+        <tr>
+          <td>Company</td>
+          <td>Trading Name</td>
+          <td>Ask</td>
+          <td>Bid</td>
+          <td>Trading Volumn</td>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each stocks}}
+          <tr>
+          {{> stock}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<template name="stock">
+    <td>{{companyName}}</td>
+    <td>{{tradingSymbol}}</td>
+    <td>${{ASK}}</td>
+    <td>${{BID}}</td>
+    <td>{{tradingVolumn}}</td>
+</template>
