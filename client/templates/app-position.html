@@ -1,11 +1,36 @@
 <template name='appPosition'>
+
   {{#if currentUser}}
     <div align='center'>
-     <h2>This is a postion page!</h2>
+      <br>
+      <br>
+      <h3>Your current market positions:</h3>
+      <br>
+      <br>
+      <table class='table-condensed table-bordered table-hover' width="90%">
+        <thead class="thead-inverse">
+          <tr>
+            <td align='center'>Instrument</td>
+            <td align='center'>Amount</td>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each positions}}
+              {{> position}}
+          {{/each}}
+        </tbody>
+      </table>
     </div>
   {{else}}
     <div align='center'>
      <h2>No Permission!</h2>
     </div>
   {{/if}}
+</template>
+
+<template name='position'>
+    <tr>
+      <td align='center'>{{instrument}}</td>
+      <td align='center'>{{amount}}</td>
+    </tr>
 </template>

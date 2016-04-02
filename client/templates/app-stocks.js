@@ -1,3 +1,4 @@
+var ERRORS_KEY = 'quoteErrors';
 Template.appStocks.onCreated(function bodyOnCreated() {
 
   Meteor.subscribe('stockLists');
@@ -31,5 +32,28 @@ Template.appStocks.helpers({
 });
 
 Template.appStocks.events({
+
+  "submit form": function(event){
+
+    event.preventDefault();
+    var errors = {};
+
+    var type = template.$('[name=type]').val();
+    var stock = template.$('[name=stock]').val();
+    var price = template.$('[name=price]').val();
+    var quantity = template.$('[name=quantity]').val();
+
+
+    if (confirm !== password) {
+      errors.confirm = 'Please confirm your password';
+    }
+
+    Session.set(ERRORS_KEY, errors);
+    if (_.keys(errors).length) {
+      return;
+    }
+
+
+  },
 
 });

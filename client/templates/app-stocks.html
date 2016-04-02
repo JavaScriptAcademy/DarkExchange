@@ -2,7 +2,7 @@
   <br>
   <br>
   <div align='center'>
-    <h2>Market Panel</h2>
+    <h3>Market Panel</h3>
     <br>
     <br>
     <table class='table-condensed table-bordered table-hover' width="90%">
@@ -23,6 +23,31 @@
         {{/each}}
       </tbody>
     </table>
+    {{#if currentUser}}
+      <br><br>
+      <br><br>
+      <form>
+        {{#if errorMessages}}
+          <div class="list-errors">
+            {{#each errorMessages}}
+              <div class="list-item">{{this}}</div>
+            {{/each}}
+          </div>
+        {{/if}}
+        <select name='type' required='true'>
+          <option>Buy</option>
+          <option>Sell</option>
+        </select>
+        <select name='stock' required='true'>
+          {{#each stocks}}
+            {{> stockname}}
+          {{/each}}
+        </select>
+        <input type='number' placeholder='price' name='price' step='0.02' required='true'/>
+        <input type='number' placeholder='quantity' name='quantity' step='1' required='true'/>
+        <button class='btn btn-success' type='submit'>Quote</button>
+      </form>
+    {{/if}}
   </div>
 </template>
 
@@ -32,4 +57,9 @@
     <td align='center'>${{bestAsk}}</td>
     <td align='center'>${{bestBid}}</td>
     <td align='center'>{{tradingVolumn}}</td>
+</template>
+
+<template name="stockname">
+
+    <option>{{tradingSymbol}}</option>
 </template>
