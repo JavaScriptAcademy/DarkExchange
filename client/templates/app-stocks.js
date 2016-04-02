@@ -2,10 +2,14 @@ var ERRORS_KEY = 'quoteErrors';
 Template.appStocks.onCreated(function bodyOnCreated() {
 
   Meteor.subscribe('stockLists');
+  Session.set(ERRORS_KEY, {});
 
 });
 
 Template.appStocks.helpers({
+  errorMessages: function() {
+    return _.values(Session.get(ERRORS_KEY));
+  },
   stocks() {
 
     var stocks = stockLists.find({});
@@ -33,9 +37,10 @@ Template.appStocks.helpers({
 
 Template.appStocks.events({
 
-  "submit form": function(event){
+  "submit form": function(event, template){
 
     event.preventDefault();
+
     var errors = {};
 
     var type = template.$('[name=type]').val();
@@ -43,17 +48,22 @@ Template.appStocks.events({
     var price = template.$('[name=price]').val();
     var quantity = template.$('[name=quantity]').val();
 
-
-    if (confirm !== password) {
-      errors.confirm = 'Please confirm your password';
+    if (type == "Sell" && Meteor.user().profile[stock] == undefined){
+      errors.nosuchstock = 'You dont own any stocks of ' + stock;
+    }
+    if (type == "Sell" && Meteor.user().profile[stock] < quantity){
+      errors.noenoughstock = 'You dont own enough stocks of ' + stock;
+    }
+    if (type == "Buy" && Meteor.user().profile.cash < quantity * price ){
+      errors.noenoughmoney = 'You dont have sufficient money to buy ' + quantity + ' shares of ' + stock;
     }
 
+
     Session.set(ERRORS_KEY, errors);
+
     if (_.keys(errors).length) {
       return;
     }
-
-
   },
 
 });

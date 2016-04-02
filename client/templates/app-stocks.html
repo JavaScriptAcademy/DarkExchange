@@ -27,16 +27,9 @@
       <br><br>
       <br><br>
       <form>
-        {{#if errorMessages}}
-          <div class="list-errors">
-            {{#each errorMessages}}
-              <div class="list-item">{{this}}</div>
-            {{/each}}
-          </div>
-        {{/if}}
         <select name='type' required='true'>
-          <option>Buy</option>
-          <option>Sell</option>
+          <option value='Buy'>Buy</option>
+          <option value='Sell'>Sell</option>
         </select>
         <select name='stock' required='true'>
           {{#each stocks}}
@@ -47,6 +40,13 @@
         <input type='number' placeholder='quantity' name='quantity' step='1' required='true'/>
         <button class='btn btn-success' type='submit'>Quote</button>
       </form>
+      {{#if errorMessages}}
+        <div class="list-errors">
+          {{#each errorMessages}}
+            <div class="list-item">{{this}}</div>
+          {{/each}}
+        </div>
+      {{/if}}
     {{/if}}
   </div>
 </template>
@@ -61,5 +61,5 @@
 
 <template name="stockname">
 
-    <option>{{tradingSymbol}}</option>
+    <option value="{{tradingSymbol}}">{{tradingSymbol}}</option>
 </template>

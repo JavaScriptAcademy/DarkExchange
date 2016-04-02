@@ -16,7 +16,10 @@
         </thead>
         <tbody>
           {{#each positions}}
-              {{> position}}
+              <tr>
+                <td align='center'>{{this.instrument}}</td>
+                <td align='center'>{{this.amount}}</td>
+              </tr>
           {{/each}}
         </tbody>
       </table>
@@ -29,8 +32,5 @@
 </template>
 
 <template name='position'>
-    <tr>
-      <td align='center'>{{instrument}}</td>
-      <td align='center'>{{amount}}</td>
-    </tr>
+
 </template>
