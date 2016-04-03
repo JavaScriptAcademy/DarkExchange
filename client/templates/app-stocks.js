@@ -18,16 +18,12 @@ Template.appStocks.helpers({
 
       var bids = stock.BID;
       var asks = stock.ASK;
-      var bestBid = bids[0].price;
-      var bestAsk = asks[0].price
-      for(var i = 1; i < bids.length; i++){
-        if(bids[i].price > bestBid) bestBid = bids[i].price;
-      }
-      for(var i = 1; i < asks.length; i++){
-        if(asks[i].price < bestAsk) bestAsk = asks[i].price;
-      }
-      stock.bestBid = bestBid.toFixed(2);
-      stock.bestAsk = bestAsk.toFixed(2);
+
+      var bids_price = Object.keys(bids);
+      var asks_price = Object.keys(asks);
+
+      stock.bestBid = Math.max(bids_price).toFixed(2);
+      stock.bestAsk = Math.min(asks_price).toFixed(2);
       stocks_info.push(stock);
     });
 
@@ -64,6 +60,23 @@ Template.appStocks.events({
     if (_.keys(errors).length) {
       return;
     }
+
+    hasSuchQuote(price, stock, type);
   },
 
 });
+
+function hasSuchQuote(price, stock, bidOrAsk){
+  bidOrAsk = bidOrAsk == "Buy" ? "BID" : "ASK";
+  var _stock = stockLists.findOne({tradingSymbol : stock});
+  var _bidOrAsk = _stock[bidOrAsk];
+
+  for(var i = 0; i < _bidOrAsk.length; i++){
+    if(_bidOrAsk[i].price == price){
+      return ;
+    }
+  }
+
+
+
+}
