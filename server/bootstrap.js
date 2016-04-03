@@ -4,29 +4,29 @@ Meteor.startup(function () {
     var data = [
       {companyName: "Microsoft.Corp", tradingSymbol: "MSFT", ASK:
         {
-          "70.02" : [
+          "70_02" : [
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 12:22:33"},
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 13:22:33"}
                     ],
-          "70.04" : [
+          "70_04" : [
                       {"volumn" : 180, "user" : "System", "time" : "2016-03-26 14:22:33"},
                       {"volumn" : 280, "user" : "System", "time" : "2016-03-26 15:22:33"}
                      ],
-          "70.06" : [
+          "70_06" : [
                       {"volumn" : 30, "user" : "System", "time" : "2016-03-26 15:22:33"},
                       {"volumn" : 40, "user" : "System", "time" : "2016-03-26 17:22:33"}
                     ]
         }, BID:
         {
-          "70.00" : [
+          "70_00" : [
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 12:22:33"},
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 13:22:33"}
                     ],
-          "69.98" : [
+          "69_98" : [
                       {"volumn" : 180, "user" : "System", "time" : "2016-03-26 14:22:33"},
                       {"volumn" : 280, "user" : "System", "time" : "2016-03-26 15:22:33"}
                      ],
-          "69.96" : [
+          "69_96" : [
                       {"volumn" : 30, "user" : "System", "time" : "2016-03-26 15:22:33"},
                       {"volumn" : 40, "user" : "System", "time" : "2016-03-26 17:22:33"}
                     ]
@@ -34,29 +34,29 @@ Meteor.startup(function () {
       },
       {companyName: "Google.Corp", tradingSymbol: "GOOG", ASK:
         {
-          "70.02" : [
+          "50_02" : [
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 12:22:33"},
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 13:22:33"}
                     ],
-          "70.04" : [
+          "50_04" : [
                       {"volumn" : 180, "user" : "System", "time" : "2016-03-26 14:22:33"},
                       {"volumn" : 280, "user" : "System", "time" : "2016-03-26 15:22:33"}
                      ],
-          "70.06" : [
+          "50_06" : [
                       {"volumn" : 30, "user" : "System", "time" : "2016-03-26 15:22:33"},
                       {"volumn" : 40, "user" : "System", "time" : "2016-03-26 17:22:33"}
                     ]
         }, BID:
         {
-          "70.00" : [
+          "50_00" : [
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 12:22:33"},
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 13:22:33"}
                     ],
-          "69.98" : [
+          "49_98" : [
                       {"volumn" : 180, "user" : "System", "time" : "2016-03-26 14:22:33"},
                       {"volumn" : 280, "user" : "System", "time" : "2016-03-26 15:22:33"}
                      ],
-          "69.96" : [
+          "49_96" : [
                       {"volumn" : 30, "user" : "System", "time" : "2016-03-26 15:22:33"},
                       {"volumn" : 40, "user" : "System", "time" : "2016-03-26 17:22:33"}
                     ]
@@ -64,29 +64,29 @@ Meteor.startup(function () {
       },
       {companyName: "Epam.Ltd", tradingSymbol: "EPM", ASK:
         {
-          "70.02" : [
+          "30_02" : [
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 12:22:33"},
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 13:22:33"}
                     ],
-          "70.04" : [
+          "30_04" : [
                       {"volumn" : 180, "user" : "System", "time" : "2016-03-26 14:22:33"},
                       {"volumn" : 280, "user" : "System", "time" : "2016-03-26 15:22:33"}
                      ],
-          "70.06" : [
+          "30_06" : [
                       {"volumn" : 30, "user" : "System", "time" : "2016-03-26 15:22:33"},
                       {"volumn" : 40, "user" : "System", "time" : "2016-03-26 17:22:33"}
                     ]
         }, BID:
         {
-          "70.00" : [
+          "30_00" : [
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 12:22:33"},
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 13:22:33"}
                     ],
-          "69.98" : [
+          "29_98" : [
                       {"volumn" : 180, "user" : "System", "time" : "2016-03-26 14:22:33"},
                       {"volumn" : 280, "user" : "System", "time" : "2016-03-26 15:22:33"}
                      ],
-          "69.96" : [
+          "29_96" : [
                       {"volumn" : 30, "user" : "System", "time" : "2016-03-26 15:22:33"},
                       {"volumn" : 40, "user" : "System", "time" : "2016-03-26 17:22:33"}
                     ]
@@ -94,29 +94,29 @@ Meteor.startup(function () {
       },
       {companyName: "Alibaba.Ltd", tradingSymbol: "ALIB", ASK:
         {
-          "70.02" : [
+          "10_02" : [
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 12:22:33"},
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 13:22:33"}
                     ],
-          "70.04" : [
+          "10_04" : [
                       {"volumn" : 180, "user" : "System", "time" : "2016-03-26 14:22:33"},
                       {"volumn" : 280, "user" : "System", "time" : "2016-03-26 15:22:33"}
                      ],
-          "70.06" : [
+          "10_06" : [
                       {"volumn" : 30, "user" : "System", "time" : "2016-03-26 15:22:33"},
                       {"volumn" : 40, "user" : "System", "time" : "2016-03-26 17:22:33"}
                     ]
         }, BID:
         {
-          "70.00" : [
+          "10_00" : [
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 12:22:33"},
                       {"volumn" : 80, "user" : "System", "time" : "2016-03-26 13:22:33"}
                     ],
-          "69.98" : [
+          "9_98" : [
                       {"volumn" : 180, "user" : "System", "time" : "2016-03-26 14:22:33"},
                       {"volumn" : 280, "user" : "System", "time" : "2016-03-26 15:22:33"}
                      ],
-          "69.96" : [
+          "9_96" : [
                       {"volumn" : 30, "user" : "System", "time" : "2016-03-26 15:22:33"},
                       {"volumn" : 40, "user" : "System", "time" : "2016-03-26 17:22:33"}
                     ]
