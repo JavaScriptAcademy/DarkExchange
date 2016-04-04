@@ -229,3 +229,6 @@ function createTransaction(price, stock, bidOrAsk, quantity, counterparty){
 //1. need to update users table
 //2. need to show alert when transaction executed
 //3. need to jump to confirm page after quote
+//1. need to update users table
+//2. need to show alert when transaction executed
+//3. need to jump to confirm page after quote
