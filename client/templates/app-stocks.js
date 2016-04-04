@@ -70,13 +70,18 @@ Template.appStocks.events({
 
     if(hasSuchQuote(price, stock, type)){
 
-      addToOrderBook(price, stock, type, quantity);
+      addToExistingQuote(price, stock, type, quantity);
+      //console.log(1);
 
     }else{
       if((type == "Sell" && price > NBBO[stock].bestAsk) || (type == "Buy" && price < NBBO[stock].bestBid)){
-          addToOrderBook(price, stock, type, quantity);
+          
+          createNewQuote(price, stock, type, quantity);
+          //console.log(2);
       }else{
+          
           executeTranscation(price, stock, type, quantity);
+          //console.log(3);
       }
     }
   },
@@ -95,7 +100,7 @@ function hasSuchQuote(price, stock, bidOrAsk){
   return _bidOrAsk[_price] != undefined;
 }
 
-function addToOrderBook(price, stock, bidOrAsk, quantity){
+function addToExistingQuote(price, stock, bidOrAsk, quantity){
 
   var update = {};
   bidOrAsk = bidOrAsk == "Buy" ? "BID" : "ASK";
@@ -108,14 +113,33 @@ function addToOrderBook(price, stock, bidOrAsk, quantity){
       user : Meteor.user()._id,
       time : Date()
   });
-  
-  //more code here
 
   _stock[bidOrAsk][_price] = _bidOrAsk[_price];
   update[bidOrAsk] = _stock[bidOrAsk];
   stockLists.update({_id : _stock._id}, {$set : update});
 }
 
+function createNewQuote(price, stock, bidOrAsk, quantity){
+
+  var update = {};
+  bidOrAsk = bidOrAsk == "Buy" ? "BID" : "ASK";
+  var _stock = stockLists.findOne({tradingSymbol : stock});
+  var _bidOrAsk = _stock[bidOrAsk];
+  var _price = Number(price).toFixed(2);
+  _price = _price.replace("." , "_"); 
+  _bidOrAsk[_price] = 
+    [
+      {
+        volumn : quantity, 
+        user : Meteor.user()._id,
+        time : Date()
+      }
+    ];
+
+  _stock[bidOrAsk] = _bidOrAsk;
+  update[bidOrAsk] = _stock[bidOrAsk];
+  stockLists.update({_id : _stock._id}, {$set : update});
+}
 
 function convertToNumbers(arr){
   
