@@ -5,3 +5,9 @@ Meteor.publish('stockLists', function() {
 
 });
 
+Meteor.publish('transactionLists', function(userid) {
+
+  return transactionLists.find({$or: [{seller: userid}, {buyer: userid}]});
+
+});
+
