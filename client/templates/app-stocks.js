@@ -4,8 +4,10 @@ var NBBO = {};
 Template.appStocks.onCreated(function stocksOnCreated() {
 
   Meteor.subscribe('stockLists');
-  Meteor.subscribe('transactionLists', Session.get("USER_ID"));
-
+  if(Meteor.user()){
+    Meteor.subscribe('transactionLists', Meteor.user()._id);
+    Meteor.subscribe('quotes', Meteor.user()._id);
+  }
   Session.set(ERRORS_KEY, {});
 
 });
@@ -68,6 +70,7 @@ Template.appStocks.events({
     if (_.keys(errors).length) {
       return;
     }
+    addQuote(price, stock, type, quantity); // create new quote
 
     if(hasSuchQuote(price, stock, type)){
 
@@ -75,7 +78,7 @@ Template.appStocks.events({
       //console.log(1);
 
     }else{
-      if((type == "Sell" && price > NBBO[stock].bestAsk) || (type == "Buy" && price < NBBO[stock].bestBid)){
+      if(!hasMatchedQuote(price, stock, type)){
 
           createNewQuote(price, stock, type, quantity);
           //console.log(2);
@@ -87,6 +90,8 @@ Template.appStocks.events({
           //  console.log(transcations);
       }
     }
+
+    Router.go('processed'); //go to processed page
   },
 
 });
@@ -98,6 +103,17 @@ function hasSuchQuote(price, stock, bidOrAsk){
   var _bidOrAsk = _stock[bidorask];
   var _price = Number(price).toFixed(2);
 
+  _price = _price.replace("." , "_");
+
+  return _bidOrAsk[_price] != undefined;
+}
+
+function hasMatchedQuote(price, stock, bidOrAsk){
+
+  var bidorask = bidOrAsk == "Sell" ? "BID" : "ASK"; // get opposite quote
+  var _stock = stockLists.findOne({tradingSymbol : stock});
+  var _bidOrAsk = _stock[bidorask];
+  var _price = Number(price).toFixed(2);
   _price = _price.replace("." , "_");
 
   return _bidOrAsk[_price] != undefined;
@@ -155,6 +171,7 @@ function convertToNumbers(arr){
 }
 
 function executeQuote(price, stock, bidOrAsk, quantity){
+
     //console.log('execute it');
     var transaction_array = [];
     var bidorask = bidOrAsk == "Sell" ? "BID" : "ASK"; //get the opposite type to match
@@ -241,7 +258,6 @@ function postTransactions(transactions){
 function updateUserPositions(transactions){
     _.each(transactions, function(transaction) {
        var update = {}; update.profile = {};
-
        //for seller
        if(transaction.seller != "System"){
            var seller_profile = Meteor.users.findOne({_id : transaction.seller}).profile;
@@ -252,20 +268,33 @@ function updateUserPositions(transactions){
        }
        //for buyer
        update = {}; update.profile = {};
-       var buyer_profile = Meteor.users.findOne({_id : transaction.buyer}).profile;
-       update.profile.cash = buyer_profile.cash - transaction.price * transaction.volumn;
+       if(transaction.buyer != "System"){
+           var buyer_profile = Meteor.users.findOne({_id : transaction.buyer}).profile;
+           update.profile.cash = buyer_profile.cash - transaction.price * transaction.volumn;
 
-       if(buyer_profile[transaction.tradingSymbol] == undefined){
+           if(buyer_profile[transaction.tradingSymbol] == undefined){
 
-          update.profile[transaction.tradingSymbol] = transaction.volumn;
+              update.profile[transaction.tradingSymbol] = transaction.volumn;
 
-       }else{
+           }else{
 
-          update.profile[transaction.tradingSymbol] = Number(buyer_profile[transaction.tradingSymbol]) + Number(transaction.volumn);
+              update.profile[transaction.tradingSymbol] = Number(buyer_profile[transaction.tradingSymbol]) + Number(transaction.volumn);
 
-       }
+           }
+       } 
        //console.log(update);
        Meteor.users.update({_id : transaction.buyer}, {$set : update});
 
+    });
+}
+
+function addQuote(price, stock, bidOrAsk, quantity){
+    quotes.insert({
+      quoter : Meteor.user()._id,
+      price : price,
+      tradingSymbol : stock,
+      type : bidOrAsk,
+      volumn : quantity,
+      time : new Date()
     });
 }

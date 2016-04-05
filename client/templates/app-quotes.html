@@ -1,2 +1,35 @@
 <template name='appQuotes'>
+  <div align='center'>
+  	<br>
+    <br>
+    <h3>Quote History</h3>
+    <br>
+    <br>
+    <table class='table-condensed table-bordered table-hover' width="90%">
+      <thead class="thead-inverse">
+        <tr>
+          <td align='center'>Stock</td>
+          <td align='center'>Price</td>
+   		  <td align='center'>Type</td>	
+          <td align='center'>Volumn</td>
+          <td align='center'>Time</td>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each quotes}}
+          <tr>
+          {{> quote}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<template name="quote">
+    <td align='center'>{{tradingSymbol}}</td>
+    <td align='center'>$ {{price}}</td>
+    <td align='center'>{{type}}</td>
+    <td align='center'>{{volumn}}</td>
+    <td align='center'>{{time}}</td>
 </template>

@@ -6,7 +6,9 @@ Template.appQuotes.onCreated(function quotesOnCreated() {
 });
 
 Template.appQuotes.helpers({
-
+	quotes() {
+		return quotes.find({});
+	}
 });
 
 Template.appQuotes.events({
