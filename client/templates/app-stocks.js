@@ -188,7 +188,7 @@ function executeQuote(price, stock, bidOrAsk, quantity){
 
         }else{
 
-             transaction_array.push(createTransaction(price, stock, bidOrAsk, quantity, matched_quote_array[0].user));
+             transaction_array.push(createTransaction(price, stock, bidOrAsk, matched_quote_array[0].volumn, matched_quote_array[0].user));
              quantity = quantity - matched_quote_array[0].volumn;
              matched_quote_array = matched_quote_array.slice(1, matched_quote_array.length);
              _stock[bidorask][_price] = matched_quote_array;
@@ -200,7 +200,7 @@ function executeQuote(price, stock, bidOrAsk, quantity){
              }
         }
     }
-    console.log(update);
+    //console.log(update);
     stockLists.update({_id : _stock._id}, {$set : update});
     return transaction_array;
 }
@@ -246,9 +246,9 @@ function updateUserPositions(transactions){
        //for seller
        if(transaction.seller != "System"){
            var seller_profile = Meteor.users.findOne({_id : transaction.seller}).profile;
-           update.profile.cash = seller_profile.cash + transaction.price * transaction.volumn
+           update.profile.cash = Number(seller_profile.cash) + transaction.price * transaction.volumn
            update.profile[transaction.tradingSymbol] = seller_profile[transaction.tradingSymbol] - transaction.volumn;
-           console.log(update);
+           //console.log(update);
            Meteor.users.update({_id : transaction.seller}, {$set : update});
        }
        //for buyer
@@ -262,10 +262,10 @@ function updateUserPositions(transactions){
 
        }else{
 
-          update.profile[transaction.tradingSymbol] = buyer_profile[transaction.tradingSymbol] - transaction.volumn;
+          update.profile[transaction.tradingSymbol] = Number(buyer_profile[transaction.tradingSymbol]) + Number(transaction.volumn);
 
        }
-       console.log(update);
+       //console.log(update);
        Meteor.users.update({_id : transaction.buyer}, {$set : update});
 
     });
