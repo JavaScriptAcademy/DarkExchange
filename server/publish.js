@@ -1,8 +1,3 @@
-// Meteor.publish('users', function(){
-
-//   return users.find({}, { profile: 1, _id:1 });
-
-// });
 
 Meteor.publish('stockLists', function() {
 

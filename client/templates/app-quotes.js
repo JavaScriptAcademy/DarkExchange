@@ -1,12 +1,13 @@
-Meteor.startup(function () {
+Template.appQuotes.onCreated(function quotesOnCreated() {
 
-  Meteor.subscribe('quotes');
 
-});
-
-Template.appStocks.helpers({
+   Meteor.subscribe('quotes', Meteor.user()._id);
 
 });
 
-Template.appStocks.events({
+Template.appQuotes.helpers({
+
+});
+
+Template.appQuotes.events({
 });

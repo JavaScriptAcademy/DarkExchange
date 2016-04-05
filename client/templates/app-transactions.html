@@ -1,0 +1,35 @@
+<template name="appTransactions">
+  <div align='center'>
+    <h3>Transactions</h3>
+    <br>
+    <br>
+    <table class='table-condensed table-bordered table-hover' width="90%">
+      <thead class="thead-inverse">
+        <tr>
+          <td align='center'>Stock</td>
+          <td align='center'>Price</td>
+          <td align='center'>Seller</td>
+          <td align='center'>Buyer</td>
+          <td align='center'>Volumn</td>
+          <td align='center'>Time</td>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each transactions}}
+          <tr>
+          {{> transaction}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<template name="transaction">
+    <td align='center'>{{tradingSymbol}}</td>
+    <td align='center'>$ {{price}}</td>
+    <td align='center'>{{seller}}</td>
+    <td align='center'>{{buyer}}</td>
+    <td align='center'>{{volumn}}</td>
+    <td align='center'>{{time}}</td>
+</template>

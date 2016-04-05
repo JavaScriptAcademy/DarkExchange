@@ -1,11 +1,11 @@
 var ERRORS_KEY = 'quoteErrors';
 var NBBO = {};
 
-Template.appStocks.onCreated(function bodyOnCreated() {
+Template.appStocks.onCreated(function stocksOnCreated() {
 
   Meteor.subscribe('stockLists');
-  Meteor.subscribe('transactionLists');
-  //Meteor.subscribe('users');
+  Meteor.subscribe('transactionLists', Session.get("USER_ID"));
+
   Session.set(ERRORS_KEY, {});
 
 });
@@ -45,7 +45,6 @@ Template.appStocks.events({
   "submit form": function(event, template){
 
     event.preventDefault();
-
     var errors = {};
 
     var type = template.$('[name=type]').val();
