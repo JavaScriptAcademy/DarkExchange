@@ -5,6 +5,7 @@ Template.appStocks.onCreated(function bodyOnCreated() {
 
   Meteor.subscribe('stockLists');
   Meteor.subscribe('transactionLists');
+  //Meteor.subscribe('users');
   Session.set(ERRORS_KEY, {});
 
 });
@@ -17,7 +18,7 @@ Template.appStocks.helpers({
 
     var stocks = stockLists.find({});
     var stocks_info = [];
-  
+
     stocks.forEach(function(stock){
 
       var bids = stock.BID;
@@ -76,23 +77,15 @@ Template.appStocks.events({
 
     }else{
       if((type == "Sell" && price > NBBO[stock].bestAsk) || (type == "Buy" && price < NBBO[stock].bestBid)){
-          
+
           createNewQuote(price, stock, type, quantity);
           //console.log(2);
       }else{
-          
-          var transcations = executeQuote(price, stock, type, quantity); //execute the quote
-          _.each(transactions, function(transaction) { //update transaction table
-            transactionLists.insert({
-              tradingSymbol: transaction.tradingSymbol,
-              buyer: transaction.buyer,
-              seller: transaction.seller,
-              price: transaction.price,
-              volumn: transaction.volumn,
-              time: transaction.time
-            });
-          });
-          //console.log(3);
+
+          var transactions = executeQuote(price, stock, type, quantity); //execute the quote
+          postTransactions(transactions); // post transactions
+          updateUserPositions(transactions);
+          //console.log(transcations);
       }
     }
   },
@@ -105,9 +98,9 @@ function hasSuchQuote(price, stock, bidOrAsk){
   var _stock = stockLists.findOne({tradingSymbol : stock});
   var _bidOrAsk = _stock[bidorask];
   var _price = Number(price).toFixed(2);
-  
-  _price = _price.replace("." , "_"); 
-  
+
+  _price = _price.replace("." , "_");
+
   return _bidOrAsk[_price] != undefined;
 }
 
@@ -118,9 +111,9 @@ function addToExistingQuote(price, stock, bidOrAsk, quantity){
   var _stock = stockLists.findOne({tradingSymbol : stock});
   var _bidOrAsk = _stock[bidorask];
   var _price = Number(price).toFixed(2);
-  _price = _price.replace("." , "_"); 
+  _price = _price.replace("." , "_");
   _bidOrAsk[_price].push({
-      volumn : quantity, 
+      volumn : quantity,
       user : Meteor.user()._id,
       time : Date()
   });
@@ -128,6 +121,7 @@ function addToExistingQuote(price, stock, bidOrAsk, quantity){
   _stock[bidorask][_price] = _bidOrAsk[_price];
   update[bidorask] = _stock[bidorask];
   stockLists.update({_id : _stock._id}, {$set : update});
+  //console.log(update);
 }
 
 function createNewQuote(price, stock, bidOrAsk, quantity){
@@ -137,11 +131,11 @@ function createNewQuote(price, stock, bidOrAsk, quantity){
   var _stock = stockLists.findOne({tradingSymbol : stock});
   var _bidOrAsk = _stock[bidorask];
   var _price = Number(price).toFixed(2);
-  _price = _price.replace("." , "_"); 
-  _bidOrAsk[_price] = 
+  _price = _price.replace("." , "_");
+  _bidOrAsk[_price] =
     [
       {
-        volumn : quantity, 
+        volumn : quantity,
         user : Meteor.user()._id,
         time : Date()
       }
@@ -150,10 +144,11 @@ function createNewQuote(price, stock, bidOrAsk, quantity){
   _stock[bidorask] = _bidOrAsk;
   update[bidorask] = _stock[bidorask];
   stockLists.update({_id : _stock._id}, {$set : update});
+  //console.log(update);
 }
 
 function convertToNumbers(arr){
-  
+
   for(var i = 0; i < arr.length; i++){
     arr[i] = Number(arr[i].replace("_" , "."));
   }
@@ -167,22 +162,21 @@ function executeQuote(price, stock, bidOrAsk, quantity){
     var _stock = stockLists.findOne({tradingSymbol : stock});
     var _bidOrAsk = _stock[bidorask];
     var _price = Number(price).toFixed(2);
-    _price = _price.replace("." , "_"); 
-    var matched_quote_array = _stock[bidorask][_price] //get the matched quote array 
+    _price = _price.replace("." , "_");
+    var matched_quote_array = _stock[bidorask][_price] //get the matched quote array
+    var update = {};
     while(quantity != 0){
-      var update = {};
+
         if(matched_quote_array[0].volumn > quantity){
 
             transaction_array.push(createTransaction(price, stock, bidOrAsk, quantity, matched_quote_array[0].user));
-            matched_quote_array[0].volumn = matched_quote_array - quantity;
+            matched_quote_array[0].volumn = matched_quote_array[0].volumn - quantity;
             quantity = 0;
             _stock[bidorask][_price] = matched_quote_array;
             update[bidorask] = _stock[bidorask];
-            stockLists.update({_id : _stock._id}, {$set : update});
 
+        }else if(matched_quote_array[0].volumn == quantity){
 
-        }else if(matched_quote_array[0].volumn = quantity){
-           
             transaction_array.push(createTransaction(price, stock, bidOrAsk, quantity, matched_quote_array[0].user));
             quantity = 0;
             matched_quote_array.splice(0, 1);
@@ -191,10 +185,9 @@ function executeQuote(price, stock, bidOrAsk, quantity){
             if(matched_quote_array[0] == undefined){
               delete update[bidorask][_price];
             }
-            stockLists.update({_id : _stock._id}, {$set : update});
 
         }else{
-             
+
              transaction_array.push(createTransaction(price, stock, bidOrAsk, quantity, matched_quote_array[0].user));
              quantity = quantity - matched_quote_array[0].volumn;
              matched_quote_array.splice(0, 1);
@@ -203,16 +196,19 @@ function executeQuote(price, stock, bidOrAsk, quantity){
              if(matched_quote_array[0] == undefined){
                 createNewQuote(price, stock, bidOrAsk, quantity); //put exceeding quote on order book
                 delete update[bidorask][_price];
+                quantity = 0;
              }
-             stockLists.update({_id : _stock._id}, {$set : update});    
         }
     }
+    //stockLists.update({_id : _stock._id}, {$set : update});
+    //console.log(update);
     return transaction_array;
 }
 
 function createTransaction(price, stock, bidOrAsk, quantity, counterparty){
 
     var transaction = {};
+    transaction.stock= stock;
     transaction.time = new Date();
     transaction.price = price;
     transaction.quantity = quantity;
@@ -229,6 +225,48 @@ function createTransaction(price, stock, bidOrAsk, quantity, counterparty){
 //1. need to update users table
 //2. need to show alert when transaction executed
 //3. need to jump to confirm page after quote
-//1. need to update users table
-//2. need to show alert when transaction executed
-//3. need to jump to confirm page after quote
+
+function postTransactions(transactions){
+    _.each(transactions, function(transaction) { //insert transaction table
+          transactionLists.insert({
+            tradingSymbol: transaction.tradingSymbol,
+            buyer: transaction.buyer,
+            seller: transaction.seller,
+            price: transaction.price,
+            volumn: transaction.volumn,
+            time: transaction.time
+          });
+    });
+}
+
+function updateUserPositions(transactions){
+    _.each(transactions, function(transaction) {
+       var update = {}; update.profile = {};
+
+       //for seller
+       if(transaction.seller != "System"){
+           var seller_profile = Meteor.users.findOne({_id : transaction.seller}).profile;
+           update.profile.cash = seller_profile.cash + transaction.price * transaction.volumn
+           update.profile[transaction.tradingSymbol] = seller_profile[transaction.tradingSymbol] - transaction.volumn;
+           console.log(update);
+           //Meteor.users.update({_id : transaction.seller}, update);
+       }
+       //for buyer
+       update = {}; update.profile = {};
+       var buyer_profile = Meteor.users.findOne({_id : transaction.buyer}).profile;
+       update.profile.cash = buyer_profile.cash - transaction.price * transaction.volumn;
+
+       if(buyer_profile[transaction.tradingSymbol] == undefined){
+
+          update.profile[transaction.tradingSymbol] = transaction.volumn;
+
+       }else{
+
+          update.profile[transaction.tradingSymbol] = buyer_profile[transaction.tradingSymbol] - transaction.volumn;
+
+       }
+
+       console.log(update);
+       //Meteor.users.update({_id : transaction.buyer}, update);
+    });
+}
