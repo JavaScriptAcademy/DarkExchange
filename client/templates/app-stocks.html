@@ -36,8 +36,8 @@
             {{> stockname}}
           {{/each}}
         </select>
-        <input type='number' placeholder='price' name='price' step='0.02' required='true'/>
-        <input type='number' placeholder='quantity' name='quantity' step='1' required='true'/>
+        <input type='number' placeholder='Price' name='price' step='0.02' min='0.02' required='true'/>
+        <input type='number' placeholder='Quantity' name='quantity' step='1' min='1' required='true'/>
         <button class='btn btn-success' type='submit'>Quote</button>
       </form>
       {{#if errorMessages}}

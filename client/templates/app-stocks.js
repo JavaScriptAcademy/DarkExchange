@@ -188,13 +188,15 @@ function executeQuote(price, stock, bidOrAsk, quantity){
 
             transaction_array.push(createTransaction(price, stock, bidOrAsk, quantity, matched_quote_array[0].user));
             matched_quote_array[0].volumn = matched_quote_array[0].volumn - quantity;
+            update.tradingVolumn = Number(_stock.tradingVolumn) + Number(quantity); //update trading volumn
             quantity = 0;
             _stock[bidorask][_price] = matched_quote_array;
             update[bidorask] = _stock[bidorask];
-
+            
         }else if(matched_quote_array[0].volumn == quantity){
 
             transaction_array.push(createTransaction(price, stock, bidOrAsk, quantity, matched_quote_array[0].user));
+            update.tradingVolumn = Number(_stock.tradingVolumn) + Number(quantity);//update trading volumn
             quantity = 0;
             matched_quote_array = matched_quote_array.slice(1, matched_quote_array.length);
             _stock[bidorask][_price] = matched_quote_array;
@@ -202,10 +204,12 @@ function executeQuote(price, stock, bidOrAsk, quantity){
             if(matched_quote_array[0] == undefined){
               delete update[bidorask][_price];
             }
+           
 
         }else{
 
              transaction_array.push(createTransaction(price, stock, bidOrAsk, matched_quote_array[0].volumn, matched_quote_array[0].user));
+             update.tradingVolumn = Number(_stock.tradingVolumn) + Number(matched_quote_array[0].volumn);//update trading volumn
              quantity = quantity - matched_quote_array[0].volumn;
              matched_quote_array = matched_quote_array.slice(1, matched_quote_array.length);
              _stock[bidorask][_price] = matched_quote_array;
@@ -217,7 +221,7 @@ function executeQuote(price, stock, bidOrAsk, quantity){
              }
         }
     }
-    //console.log(update);
+    
     stockLists.update({_id : _stock._id}, {$set : update});
     return transaction_array;
 }
