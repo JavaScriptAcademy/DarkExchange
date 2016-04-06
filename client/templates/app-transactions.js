@@ -14,8 +14,21 @@ Template.appTransactions.onRendered(function() {
 Template.appTransactions.helpers({
 
     transactions() {
+      var _transactions = transactionLists.find({}).fetch();
+      _.each(_transactions, function(transaction){
 
-      return transactionLists.find({});
+        if(transaction.buyer != Meteor.user()._id){
+          transaction.buyer = "*";
+        }else{
+          transaction.buyer = "You";
+        }
+        if(transaction.seller != Meteor.user()._id){
+          transaction.seller = "*";
+        }else{
+          transaction.seller = "You";
+        }
+      });
+      return _transactions;
 
     },
 

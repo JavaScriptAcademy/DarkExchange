@@ -13,7 +13,7 @@ Template.appQuotes.onRendered(function() {
 
 Template.appQuotes.helpers({
 	quotes() {
-		return quotes.find({});
+		return quotes.find({}).fetch();
 	}
 });
 
