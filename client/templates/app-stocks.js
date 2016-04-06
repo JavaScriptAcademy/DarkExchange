@@ -7,6 +7,7 @@ Template.appStocks.onCreated(function stocksOnCreated() {
   if(Meteor.user()){
     Meteor.subscribe('transactionLists', Meteor.user()._id);
     Meteor.subscribe('quotes', Meteor.user()._id);
+    Meteor.subscribe('users');
   }
   Session.set(ERRORS_KEY, {});
 
@@ -261,6 +262,7 @@ function updateUserPositions(transactions){
        //for seller
        if(transaction.seller != "System"){
            var seller_profile = Meteor.users.findOne({_id : transaction.seller}).profile;
+           update.profile = seller_profile;
            update.profile.cash = Number(seller_profile.cash) + transaction.price * transaction.volumn
            update.profile[transaction.tradingSymbol] = seller_profile[transaction.tradingSymbol] - transaction.volumn;
            //console.log(update);
@@ -269,7 +271,9 @@ function updateUserPositions(transactions){
        //for buyer
        update = {}; update.profile = {};
        if(transaction.buyer != "System"){
+
            var buyer_profile = Meteor.users.findOne({_id : transaction.buyer}).profile;
+           update.profile = buyer_profile;
            update.profile.cash = buyer_profile.cash - transaction.price * transaction.volumn;
 
            if(buyer_profile[transaction.tradingSymbol] == undefined){
@@ -281,9 +285,10 @@ function updateUserPositions(transactions){
               update.profile[transaction.tradingSymbol] = Number(buyer_profile[transaction.tradingSymbol]) + Number(transaction.volumn);
 
            }
-       } 
-       //console.log(update);
-       Meteor.users.update({_id : transaction.buyer}, {$set : update});
+           //console.log(update);
+           Meteor.users.update({_id : transaction.buyer}, {$set : update});
+       }
+
 
     });
 }

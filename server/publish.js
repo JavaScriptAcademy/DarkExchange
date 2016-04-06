@@ -17,3 +17,8 @@ Meteor.publish('quotes', function(userid) {
 
 });
 
+Meteor.publish('users', function(){
+
+  return Meteor.users.find({});
+
+});
