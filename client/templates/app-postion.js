@@ -1,4 +1,4 @@
-Template.appPosition.onCreated(function bodyOnCreated() {
+Template.appPosition.onCreated(function positionOnCreated() {
 
 });
 

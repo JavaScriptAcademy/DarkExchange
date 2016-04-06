@@ -4,6 +4,13 @@ Template.appTransactions.onCreated(function transactionsOnCreated() {
 
 });
 
+Template.appTransactions.onRendered(function() {
+
+    if(Session.get("TRANSACTION_COUNT") != undefined){
+        Session.set("TRANSACTION_COUNT", undefined);
+    }
+});
+
 Template.appTransactions.helpers({
 
     transactions() {
@@ -18,5 +25,13 @@ Template.appTransactions.helpers({
 });
 
 Template.appTransactions.events({
+
+});
+
+Tracker.autorun(function () {
+
+  var count = transactionLists.find({}).count();
+
+  Session.set("TRANSACTION_COUNT", count);
 
 });

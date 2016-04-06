@@ -33,9 +33,15 @@
           </a>
           <a href='/quotes'>
             Quote History
+            {{#if newQuote}}
+              <span class='count-list'>New</span>
+            {{/if}}
           </a>
           <a href='/transactions'>
             My Transactions
+            {{#if newTransaction}}
+              <span class='count-list'>New</span>
+            {{/if}}
           </a>
         {{/if}}
       </div>

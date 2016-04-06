@@ -69,6 +69,12 @@ Template.appBody.helpers({
     } else {
       return true;
     }
+  },
+  newQuote: function() {
+    return Session.get("QUOTE_COUNT") != undefined;
+  },
+  newTransaction: function() {
+    return Session.get("TRANSACTION_COUNT") != undefined;
   }
 });
 
