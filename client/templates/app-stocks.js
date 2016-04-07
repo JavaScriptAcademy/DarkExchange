@@ -96,6 +96,14 @@ Template.appStocks.events({
     Router.go('processed'); //go to processed page
   },
 
+  'change #stock' : function(event, template){
+      if(template.$('[name=type]').val() == "Buy")
+        template.$('[name=price]').val(NBBO[template.$('[name=stock]').val()].bestAsk);
+      else
+        template.$('[name=price]').val(NBBO[template.$('[name=stock]').val()].bestBid);
+
+  },
+
 });
 
 function hasSuchQuote(price, stock, bidOrAsk){
