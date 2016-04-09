@@ -20,7 +20,6 @@ Meteor.startup(function () {
     },
     preventDefaultEvents: false
   });
-
   // Only show the connection error box if it has been 5 seconds since
   // the app started
   setTimeout(function () {

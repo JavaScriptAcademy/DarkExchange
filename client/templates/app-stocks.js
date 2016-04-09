@@ -4,13 +4,19 @@ var NBBO = {};
 Template.appStocks.onCreated(function stocksOnCreated() {
 
   Meteor.subscribe('stockLists');
+  Meteor.subscribe('stockStats');
   if(Meteor.user()){
     Meteor.subscribe('transactionLists', Meteor.user()._id);
     Meteor.subscribe('quotes', Meteor.user()._id);
     Meteor.subscribe('users');
   }
   Session.set(ERRORS_KEY, {});
+  
+});
 
+Template.appStocks.onRendered(function() {
+
+    
 });
 
 Template.appStocks.helpers({
@@ -42,6 +48,7 @@ Template.appStocks.helpers({
 
     return stocks_info;
   },
+
 });
 
 Template.appStocks.events({
@@ -104,6 +111,9 @@ Template.appStocks.events({
 
   },
 
+  'click .stock' : function(){
+      Session.set('SELECTED_STOCK', this.tradingSymbol);
+  },
 });
 
 function hasSuchQuote(price, stock, bidOrAsk){
@@ -353,3 +363,54 @@ function isEqual(previous, current){
   });
   return true;
 }
+
+function renderGraph(stockStat){
+
+  nv.addGraph(function() {
+        var chart = nv.models.candlestickBarChart()
+            .x(function(d) { return d['date'] })
+            .y(function(d) { return d['close'] })
+            .duration(250)
+            .margin({left: 75, bottom: 50});
+
+        // chart sub-models (ie. xAxis, yAxis, etc) when accessed directly, return themselves, not the parent chart, so need to chain separately
+        chart.xAxis
+                .axisLabel(stockStat.tradingSymbol)
+                .tickFormat(function(d) {
+                    // I didn't feel like changing all the above date values
+                    // so I hack it to make each value fall on a different date
+                    return d3.time.format('%x')(new Date(new Date() - (20000 * 86400000) + (d * 86400000)));
+                });
+
+        chart.yAxis
+                .axisLabel('Stock Price')
+                .tickFormat(function(d,i){ return '$' + d3.format(',.1f')(d); });
+
+
+
+        d3.select("#chart1 svg")
+                .datum([{values : stockStat.values}])
+                .transition().duration(500)
+                .call(chart);
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+    });
+
+}
+Tracker.autorun(function(){
+
+    if(Session.get('SELECTED_STOCK') != undefined){
+       var stockStat = stockStats.findOne({tradingSymbol : Session.get('SELECTED_STOCK')});
+       if(stockStat != undefined){
+        
+          renderGraph(stockStat);
+        
+      }
+    }else{
+
+      Session.set('SELECTED_STOCK', 'MSFT');
+
+    }
+    
+});

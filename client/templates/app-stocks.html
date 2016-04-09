@@ -17,15 +17,18 @@
       </thead>
       <tbody>
         {{#each stocks}}
-          <tr>
+          <tr class='stock'>
           {{> stock}}
           </tr>
         {{/each}}
       </tbody>
     </table>
+    
+      <br><br>
+      <div id="chart1">
+        <svg></svg>
+      </div>
     {{#if currentUser}}
-      <br><br>
-      <br><br>
       <form>
         <select name='type' required='true'>
           <option value='Buy'>Buy</option>
@@ -49,6 +52,7 @@
       {{/if}}
     {{/if}}
   </div>
+  
 </template>
 
 <template name="stock">
