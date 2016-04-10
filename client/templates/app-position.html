@@ -1,34 +1,30 @@
 <template name='appPosition'>
 
-  {{#if currentUser}}
-    <div align='center'>
-      <br>
-      <br>
-      <h3>Your current market positions:</h3>
-      <br>
-      <br>
-      <table class='table-condensed table-bordered table-hover' width="90%">
-        <thead class="thead-inverse">
-          <tr>
-            <td align='center'>Instrument</td>
-            <td align='center'>Amount</td>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each positions}}
-              <tr>
-                <td align='center'>{{this.instrument}}</td>
-                <td align='center'>{{this.amount}}</td>
-              </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-  {{else}}
-    <div align='center'>
-     <h2>No Permission!</h2>
-    </div>
-  {{/if}}
+  
+  <div align='center'>
+    <br>
+    <br>
+    <h3>Your current market positions:</h3>
+    <br>
+    <br>
+    <table class='table-condensed table-bordered table-hover' width="90%">
+      <thead class="thead-inverse">
+        <tr>
+          <td align='center'>Instrument</td>
+          <td align='center'>Amount</td>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each positions}}
+            <tr>
+              <td align='center'>{{this.instrument}}</td>
+              <td align='center'>{{this.amount}}</td>
+            </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  
 </template>
 
 <template name='position'>
